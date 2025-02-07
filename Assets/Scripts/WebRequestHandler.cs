@@ -95,7 +95,10 @@ public static class WebRequestHandler
             string json = JsonUtility.ToJson(jsonData);
             byte[] conntent = System.Text.Encoding.UTF8.GetBytes(json);
 
-            using var request = new UnityWebRequest(url, "PATCH");
+            using var request = UnityWebRequest.Put(url, conntent);
+            request.method = "PATCH";
+            // using var request = new UnityWebRequest(url, "PATCH");
+        
             request.uploadHandler = new UploadHandlerRaw(conntent);
             request.downloadHandler = new DownloadHandlerBuffer();
 
