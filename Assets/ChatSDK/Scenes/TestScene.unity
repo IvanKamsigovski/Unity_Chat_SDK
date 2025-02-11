@@ -255,6 +255,7 @@ GameObject:
   m_Component:
   - component: {fileID: 185376299}
   - component: {fileID: 185376300}
+  - component: {fileID: 185376301}
   m_Layer: 0
   m_Name: Tester
   m_TagString: Untagged
@@ -291,6 +292,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _socketUrl: ws://localhost:3001/api/v1/messages
   _starOnAvake: 1
+--- !u!114 &185376301
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 185376297}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c05451962b99e94b85433009ea5c814, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _url: http://localhost:3001/api/v1
+  _id: 3
+  _deleteID: 2
+  _getUsersBtn: {fileID: 171620173}
+  _getUserOfIDBtn: {fileID: 304813716}
+  _getChannels: {fileID: 1194128124}
+  _getChannelOfIDBtn: {fileID: 1402348827}
+  _createUser: {fileID: 1495183510}
+  _addUserToChannel: {fileID: 306137109}
+  _updateUser: {fileID: 1975697285}
+  _deleteUser: {fileID: 523148076}
+  _responseString: {fileID: 206606159}
 --- !u!1 &206606157
 GameObject:
   m_ObjectHideFlags: 0
@@ -1596,7 +1621,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 480, y: 0}
+  m_AnchoredPosition: {x: 493.59, y: -107.19}
   m_SizeDelta: {x: 960, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1194128122

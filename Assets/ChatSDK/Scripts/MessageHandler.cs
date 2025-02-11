@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using ChatSDK.ChatClient;
 
 public class MessageHandler : MonoBehaviour
 {
