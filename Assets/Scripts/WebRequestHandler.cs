@@ -25,7 +25,10 @@ public static class WebRequestHandler
             if (request.result == UnityWebRequest.Result.Success)
                 Debug.Log($"Request succesful");
             else
+            {
                 Debug.LogError($"Request at {url} :: failed: {request.error}");
+                Debug.LogError("Response: " + request.responseCode);
+            }
 
             try
             {
@@ -47,7 +50,50 @@ public static class WebRequestHandler
     }
 
     /// <summary>
-    /// Generic methode for post requests
+    /// Generic methode for post requests with json response
+    /// </summary>
+    /// <param name="url">Url to request location</param>
+    /// <param name="jsonData">Data body of the request in form of json string</param>
+    /// <returns>Returns response json</returns>
+    public static async Task<TResponse> PostRequest<TResponse>(string url, string jsonData)
+    {
+        try
+        {
+            using var request = new UnityWebRequest(url, "POST");
+            byte[] conntent = System.Text.Encoding.UTF8.GetBytes(jsonData);
+            request.uploadHandler = new UploadHandlerRaw(conntent);
+            request.downloadHandler = new DownloadHandlerBuffer();
+
+            request.SetRequestHeader("Content-Type", "application/json");
+            var operation = request.SendWebRequest();
+
+            while (!operation.isDone)
+                await Task.Yield();
+
+
+            if (request.result == UnityWebRequest.Result.Success)
+            {
+                Debug.Log("Request sent!");
+                var response = request.downloadHandler.text;
+                return JsonUtility.FromJson<TResponse>(response);
+            }
+            else
+            {
+                Debug.LogError($"Request at {url} :: failed: {request.error}");
+                Debug.LogError("Response: " + request.responseCode);
+                return default;
+            }
+
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogWarning("Error: " + e.Message);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Generic methode for post requests with bool response
     /// </summary>
     /// <param name="url">Url to request location</param>
     /// <param name="jsonData">Data body of the request in form of json string</param>
@@ -71,11 +117,13 @@ public static class WebRequestHandler
             if (request.result == UnityWebRequest.Result.Success)
             {
                 Debug.Log("Request sent!");
+                var response = request.downloadHandler.text;
                 return true;
             }
             else
             {
                 Debug.LogError($"Request at {url} :: failed: {request.error}");
+                Debug.LogError("Response: " + request.responseCode);
                 return false;
             }
 
@@ -87,18 +135,18 @@ public static class WebRequestHandler
         }
     }
 
-    public static async Task<bool> PathchRequest(string url, string endpoint, int id, string jsonData)
+
+    public static async Task<TResponse> PathchRequest<TResponse>(string url, string jsonData)
     {
         try
         {
-            string urlWithId = $"{url}/{endpoint}/{id}";
             string json = JsonUtility.ToJson(jsonData);
             byte[] conntent = System.Text.Encoding.UTF8.GetBytes(json);
 
             using var request = UnityWebRequest.Put(url, conntent);
             request.method = "PATCH";
             // using var request = new UnityWebRequest(url, "PATCH");
-        
+
             request.uploadHandler = new UploadHandlerRaw(conntent);
             request.downloadHandler = new DownloadHandlerBuffer();
 
@@ -110,13 +158,15 @@ public static class WebRequestHandler
 
             if (request.result == UnityWebRequest.Result.Success)
             {
-                Debug.Log($"Data upaded at {urlWithId}");
-                return true;
+                Debug.Log($"Data upaded at {url}");
+                var response = request.downloadHandler.text;
+                return JsonUtility.FromJson<TResponse>(response);
             }
             else
             {
                 Debug.LogError($"Request at {url} :: failed: {request.error}");
-                return false;
+                Debug.LogError("Response: " + request.responseCode);
+                return default;
             }
 
         }
@@ -128,27 +178,27 @@ public static class WebRequestHandler
 
     }
 
-    public static async Task<bool> DeleteRequest(string url, int id)
+    public static async Task<bool> DeleteRequest(string url)
     {
         try
         {
-            string urlWithId = $"{url}/{id}";
             using var request = UnityWebRequest.Delete(url);
 
             request.SetRequestHeader("Content-Type", "application/json");
             var operation = request.SendWebRequest();
 
-             while (!operation.isDone)
+            while (!operation.isDone)
                 await Task.Yield();
 
             if (request.result == UnityWebRequest.Result.Success)
             {
-                Debug.Log($"Data deleted at {urlWithId}");
+                Debug.Log($"Data deleted at {url}");
                 return true;
             }
             else
             {
-                 Debug.LogError($"Request at {url} :: failed: {request.error}");
+                Debug.LogError($"Request at {url} :: failed: {request.error}");
+                Debug.LogError("Response: " + request.responseCode);
                 return false;
             }
 
